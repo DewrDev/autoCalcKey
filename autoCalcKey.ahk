@@ -3,10 +3,12 @@ Menu, Tray, Add, Launch on Startup?, toggleAutoLaunch
 FileCreateDir, %A_appdata%\DewrDev\autoCalcKey\
 autoLaunch()
 
+#useHook on ; increases likelihood of hotkey working while a fullscreen (i.e game) application is focused
+
 ; when the 'Calculator' key is pressed, send the a Play/Pause keypress.
 launch_App2::
 send, {Media_Play_Pause}
-returnreturn
+return
 
 toggleAutoLaunch()
 {
