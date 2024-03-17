@@ -1,3 +1,9 @@
+; Uses Lexikos' VA library - https://autohotkey.com/board/topic/21984-vista-audio-control-functions/
+; Modified by MasonJar13: https://github.com/Masonjar13/AHK-Library/blob/master/Required-Libraries/VA.ahk
+#include libraries\3rdParty\VA.ahk
+; Uses Masonjar13's setWindowVol function - https://github.com/Masonjar13/AHK-Library/blob/master/Lib/setWindowVol.ahk
+#include libraries\3rdParty\setWindowVol.ahk
+
 Menu, Tray, Tip, autoCalcKey is running
 Menu, Tray, Add, Launch on Startup?, toggleAutoLaunch
 FileCreateDir, %A_appdata%\DewrDev\autoCalcKey\
@@ -31,6 +37,8 @@ calcKeyPress()
             ;activate modifier key and use Pause+ScrollLock for media back/next
         Hotkey,pause,nextButton,on
         Hotkey,ScrollLock,backButton,on
+        Hotkey,pgUp,volumeIncrease,on
+        Hotkey,pgDn,volumeDecrease,on
         loop,
         {
             ; when key is released, turn off Pause+ScrollLock hotkeys
@@ -38,6 +46,8 @@ calcKeyPress()
             {
                 Hotkey,pause,nextButton,off
                 Hotkey,ScrollLock,backButton,off
+                Hotkey,pgUp,volumeIncrease,off
+                Hotkey,pgDn,volumeDecrease,off
                 return
             }
         }
@@ -54,6 +64,16 @@ backButton()
 nextButton()
 {
     send, {Media_Next}
+}
+
+volumeIncrease()
+{
+    setWindowVol("Spotify.exe","+10")
+}
+
+volumeDecrease()
+{
+    setWindowVol("Spotify.exe","-10")
 }
 
 toggleAutoLaunch()
