@@ -6,9 +6,55 @@ autoLaunch()
 #useHook on ; increases likelihood of hotkey working while a fullscreen (i.e game) application is focused
 
 ; when the 'Calculator' key is pressed, send the a Play/Pause keypress.
-launch_App2::
-send, {Media_Play_Pause}
-return
+
+RegRead, key,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AppKey\18,ShellExecute
+; msgbox % key
+
+Hotkey, ~launch_App2 , calcKeyPress
+; Modify Explorer's 'Appskey' to prevent the Calculator app from being run by the Calculator button. This is required because AHK cannot seem to tell if the key is being HELD when we consume all key input.
+RegWrite,REG_SZ,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AppKey\18,ShellExecute,
+
+#InstallKeybdHook
+
+calcKeyPress()
+{
+    start:=A_TickCount
+    loop,
+    {
+        if ( !(GetKeyState("launch_App2",P)) && (A_TickCount-start <= 250))
+        {
+            send, {Media_Play_Pause}
+            return
+        }
+        Else if ((GetKeyState("launch_App2",P)) && (A_TickCount-start >= 250))
+        {
+            ;activate modifier key and use Pause+ScrollLock for media back/next
+        Hotkey,pause,nextButton,on
+        Hotkey,ScrollLock,backButton,on
+        loop,
+        {
+            ; when key is released, turn off Pause+ScrollLock hotkeys
+            if !(GetKeyState("launch_App2",P))
+            {
+                Hotkey,pause,nextButton,off
+                Hotkey,ScrollLock,backButton,off
+                return
+            }
+        }
+            return
+        }
+    }
+}
+
+backButton()
+{
+    send, {Media_Prev}
+}
+
+nextButton()
+{
+    send, {Media_Next}
+}
 
 toggleAutoLaunch()
 {
