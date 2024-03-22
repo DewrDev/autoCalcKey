@@ -4,6 +4,8 @@
 ; Uses Masonjar13's setWindowVol function - https://github.com/Masonjar13/AHK-Library/blob/master/Lib/setWindowVol.ahk
 #include libraries\3rdParty\setWindowVol.ahk
 
+#include libraries\3rdParty\textRender.ahk
+
 Menu, Tray, Tip, autoCalcKey is running
 Menu, Tray, Add, Launch on Startup?, toggleAutoLaunch
 FileCreateDir, %A_appdata%\DewrDev\autoCalcKey\
@@ -39,11 +41,13 @@ calcKeyPress()
         Hotkey,ScrollLock,backButton,on
         Hotkey,pgUp,volumeIncrease,on
         Hotkey,pgDn,volumeDecrease,on
+        tr:=TextRender("Media Hotkeys Active", "a:bottomleft c:0xC0505050 r:10% x:50 bold:1 y:" A_ScreenHeight-50, "f:(Century Gothic) s:20pt c:LightCyan o:(stroke:5px color:Black)")
         loop,
         {
             ; when key is released, turn off Pause+ScrollLock hotkeys
             if !(GetKeyState("launch_App2",P))
             {
+                tr.__Delete()
                 Hotkey,pause,nextButton,off
                 Hotkey,ScrollLock,backButton,off
                 Hotkey,pgUp,volumeIncrease,off
