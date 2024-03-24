@@ -24,6 +24,8 @@ RegWrite,REG_SZ,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Exp
 
 #InstallKeybdHook
 
+global volumeTR:=
+
 calcKeyPress()
 {
     start:=A_TickCount
@@ -48,6 +50,7 @@ calcKeyPress()
             if !(GetKeyState("launch_App2",P))
             {
                 tr.__Delete()
+                volumeTR.__Delete()
                 Hotkey,pause,nextButton,off
                 Hotkey,ScrollLock,backButton,off
                 Hotkey,pgUp,volumeIncrease,off
@@ -72,12 +75,20 @@ nextButton()
 
 volumeIncrease()
 {
-    setWindowVol("Spotify.exe","+10")
+    newVol:=setWindowVol("Spotify.exe","+10")
+    displayVolume(newVol)
 }
 
 volumeDecrease()
 {
-    setWindowVol("Spotify.exe","-10")
+    newVol:=setWindowVol("Spotify.exe","-10")
+    displayVolume(newVol)
+}
+
+displayVolume(vol)
+{
+    volumeTR.__Delete()
+    volumeTR:=TextRender("Volume:" vol, "a:bottomleft c:0xC0505050 r:10% x:50 bold:1 y:" A_ScreenHeight-100, "f:(Century Gothic) s:20pt c:LightCyan o:(stroke:5px color:Black)")
 }
 
 toggleAutoLaunch()
